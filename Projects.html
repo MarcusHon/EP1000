@@ -188,7 +188,67 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
         <p>To use this to control the fan speed we need to use Pulse width modulation, PWM to pulse the high volatge output side usingthe SIG connector</p>
 
       <H2>Programme</H2>
-
+      <p><br></p>
+      <p>#define led &nbsp;4</p>
+      <p>#define motor 9</p>
+      <p>#define PBSW &nbsp;2</p>
+      <p>#define ts 13</p>
+      <p><br></p>
+      <p>const int speed=64;</p>
+      <p><br></p>
+      <p>int count = 0; &nbsp;// inital count value</p>
+      <p><br></p>
+      <p>void setup()</p>
+      <p>{</p>
+      <p>&nbsp; pinMode(led, OUTPUT);</p>
+      <p>&nbsp; pinMode(motor, OUTPUT);</p>
+      <p>&nbsp; pinMode(PBSW, INPUT_PULLUP);</p>
+      <p>&nbsp; pinMode(ts, INPUT_PULLUP);</p>
+      <p>&nbsp; decode(count);</p>
+      <p>}</p>
+      <p><br></p>
+      <p>void loop()</p>
+      <p>{</p>
+      <p>&nbsp; if (digitalRead(PBSW) == LOW){</p>
+      <p>&nbsp; &nbsp; // switch was pressed</p>
+      <p>&nbsp; &nbsp; count = (count + 1) % 4; &nbsp;// only 4 states</p>
+      <p>&nbsp; &nbsp; decode(count); &nbsp;// display it</p>
+      <p>&nbsp; &nbsp; // bouncing removed using a delay (or try to)</p>
+      <p>&nbsp; &nbsp; delay(200);</p>
+      <p>&nbsp; }</p>
+      <p>&nbsp; if (digitalRead(ts) == LOW){</p>
+      <p>&nbsp; &nbsp; // switch was pressed</p>
+      <p>&nbsp; &nbsp; delay (10000);</p>
+      <p>&nbsp; &nbsp; count = (count - count);</p>
+      <p>&nbsp; &nbsp; decode(count);</p>
+      <p>&nbsp; &nbsp; // bouncing removed using a delay (or try to)</p>
+      <p>&nbsp; &nbsp; delay(200);</p>
+      <p>&nbsp; }</p>
+      <p>&nbsp;</p>
+      <p>}</p>
+      <p><br></p>
+      <p>// decodes count into binary</p>
+      <p>void decode(int v)</p>
+      <p>{</p>
+      <p>&nbsp; switch(v){</p>
+      <p>&nbsp; &nbsp; case 0:</p>
+      <p>&nbsp; &nbsp; &nbsp; digitalWrite(led, 0);</p>
+      <p>&nbsp; &nbsp; &nbsp; analogWrite(motor, 0);</p>
+      <p>&nbsp; &nbsp; &nbsp; break;</p>
+      <p>&nbsp; &nbsp; case 1:</p>
+      <p>&nbsp; &nbsp; &nbsp; digitalWrite(led, 0);</p>
+      <p>&nbsp; &nbsp; &nbsp; analogWrite(motor, speed);</p>
+      <p>&nbsp; &nbsp; &nbsp; break;</p>
+      <p>&nbsp; &nbsp; case 2:</p>
+      <p>&nbsp; &nbsp; &nbsp; digitalWrite(led, 0);</p>
+      <p>&nbsp; &nbsp; &nbsp; analogWrite(motor, speed*2);</p>
+      <p>&nbsp; &nbsp; &nbsp; break;</p>
+      <p>&nbsp; &nbsp; case 3:</p>
+      <p>&nbsp; &nbsp; &nbsp; digitalWrite(led, 1);</p>
+      <p>&nbsp; &nbsp; &nbsp; analogWrite(motor, speed*3);</p>
+      <p>&nbsp; &nbsp; &nbsp; break;</p>
+      <p>&nbsp; } &nbsp;&nbsp;</p>
+      <p>}</p>
       <h2>intergration</h2>
       <p>when testing the entire cicuit, the high volatge lines pulsing creates a lot of electro-magnetic interferance, which messes with the ardunio signals, I reseached ways to fix this and it 
         was suggested that twisting the wires together will help cancel the EM interferance created.
